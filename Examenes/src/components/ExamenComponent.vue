@@ -3,6 +3,7 @@
     <h2 class="mb-4">Tienda de Ropa</h2>
     <div class="d-flex justify-content-end">
       <div class="text-right">
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#verCarrito">Ver Carrito</button>
         <router-link to="/filtro" class="btn btn-success">Ver Filtro</router-link>
       </div>
     </div>
@@ -87,7 +88,7 @@
                 />
               </td>
               <td>
-                <button type="button" class="btn btn-success">Agregar</button>
+                <button type="button" class="btn btn-success" @click="agregarAlCarrito(producto)">Agregar</button>
               </td>
             </tr>
           </tbody>
@@ -97,6 +98,48 @@
   </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="verCarrito" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl"> <!-- Agrega la clase modal-xl aquí -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Carrito de Compras</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Subtotal</th>
+              <th scope="col">Operaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in carrito" :key="index">
+              <td>{{ item.id }}</td>
+              <td>{{ item.descripcion }}</td>
+              <td>
+                <input type="number" v-model="item.cantidad" min="1" @input="calcularSubtotal()" />
+              </td>
+              <td>{{ item.precio }}</td>
+              <td>{{ item.cantidad * item.precio }}</td>
+              <td>
+                <button type="button" class="btn btn-danger" @click="eliminarDelCarrito(index)">Eliminar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <strong>Total: {{ calcularSubtotal() }}</strong>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script setup>
@@ -104,6 +147,7 @@ import { ref, onMounted } from 'vue'
 
 const categorias = ref([]) // Variable para almacenar las categorías
 const productosCategoria = ref([]) // Variable para almacenar los productos de la categoría seleccionada
+const carrito = ref([]) // Variable para almacenar los productos agregados al carrito
 
 const mostrarProductos = async (categoriaId) => {
   try {
@@ -142,4 +186,32 @@ onMounted(async () => {
     console.error('Error al conectar con la API', error)
   }
 })
+
+// Método para agregar productos al carrito
+const agregarAlCarrito = (producto) => {
+  // Verificar si el producto ya está en el carrito
+  const productoExistente = carrito.value.find(item => item.id === producto.id)
+  if (productoExistente) {
+    // Incrementar la cantidad si el producto ya está en el carrito
+    productoExistente.cantidad++
+  } else {
+    // Agregar el producto al carrito con una cantidad inicial de 1
+    carrito.value.push({
+      id: producto.id,
+      descripcion: producto.title,
+      cantidad: 1,
+      precio: producto.price
+    })
+  }
+}
+
+// Método para calcular el subtotal del carrito
+const calcularSubtotal = () => {
+  return carrito.value.reduce((total, item) => total + (item.cantidad * item.precio), 0)
+}
+
+// Método para eliminar un producto del carrito
+const eliminarDelCarrito = (index) => {
+  carrito.value.splice(index, 1)
+}
 </script>
