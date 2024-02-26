@@ -44,59 +44,58 @@
     </table>
   </div>
   <!-- Modal -->
-  <!-- Modal -->
-  <div
-    class="modal fade"
-    id="exampleModal"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog modal-lg">
-      <!-- Aquí se agrega la clase modal-lg -->
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Productos</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body">
-          <table class="table">
-            <thead class="thead-light">
-              <tr>
-                <th scope="col">Título</th>
-                <th scope="col">Precio</th>
-                <th scope="col">Imagen</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(producto, index) in productosCategoria" :key="index">
-                <td>{{ producto.title }}</td>
-                <td>{{ producto.price }}</td>
-                <td>
-            <img 
-              v-for="(imagen, index) in producto.images" 
-              :key="index" 
-              :src="imagen" 
-              alt="Imagen de producto" 
-              style="max-width: 100px; max-height: 100px; margin-right: 5px;"
-            />
-          </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl"> <!-- Cambiado a modal-xl -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Productos</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Título</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Imagen</th>
+              <th scope="col">Operaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(producto, index) in productosCategoria" :key="index">
+              <td>{{ producto.title }}</td>
+              <td>{{ producto.price }}</td>
+              <td>
+                <img
+                  v-for="(imagen, index) in producto.images"
+                  :key="index"
+                  :src="imagen"
+                  alt="Imagen de producto"
+                  style="max-width: 100px; max-height: 100px; margin-right: 5px"
+                />
+              </td>
+              <td>
+                <button type="button" class="btn btn-success">Agregar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+</div>
+
 </template>
 
 <script setup>
