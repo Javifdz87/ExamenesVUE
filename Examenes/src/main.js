@@ -5,6 +5,9 @@ import PrimeVue from 'primevue/config'; // Importa PrimeVue
 import App from './App.vue';
 import router from './router';
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap'
+
 
 //in main.js
 import 'primevue/resources/themes/aura-light-green/theme.css'

@@ -1,100 +1,145 @@
 <template>
-    <div class="container">
-      <h1>Examen</h1>
-      <!-- Select para elegir usuario -->
-      <select>
-        <option value="">Seleccionar usuario</option>
-        <option></option>
-      </select>
-      <div class="collapse" id="collapseExample">
-        <div class="card card-body">
-          <div class="row">
-            <div class="col-lg-12">
-              <label for="">Titulo</label>
-              <input type="text" class="form-control" />
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-12">
-              <label for="">Body</label>
-              <input type="text" class="form-control" />
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-12">
-              <button class="btn btn-warning">Edit</button>
-              <button class="btn btn-success">
-                Dar de Alta
-              </button>
-            </div>
-          </div>
-        </div>
+  <div>
+    <h2 class="mb-4">Tienda de Ropa</h2>
+    <div class="d-flex justify-content-end">
+      <div class="text-right">
+        <router-link to="/filtro" class="btn btn-success">Ver Filtro</router-link>
       </div>
-  
-      <div class="row">
-        <div class="col-lg-12 d-flex justify-content-end">
-          <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
-            aria-expanded="false" aria-controls="collapseExample">
-            Dar de Alta
-          </button>
-        </div>
-      </div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Title</th>
-            <th>Body</th>
-            <th>Operaciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>
-              <b>ELBICHO</b>
-            </td>
-            <td>SIUUU</td>
-            <td>
-              <button class="btn btn-warning" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
-                aria-expanded="false" aria-controls="collapseExample">
-                Edit
-              </button>
-  
-              <button class="btn btn-danger" >
-                Delete
-              </button>
-              <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                View comments
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
-  
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <ul>
-              <li >
-                si
-              </li>
-            </ul>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-              Close
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Categoría</th>
+          <th scope="col">Imagen</th>
+          <th scope="col">Operaciones</th>
+          <!-- Nuevo campo Operaciones -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(categoria, index) in categorias" :key="index">
+          <td>
+            <h4>{{ categoria.name }}</h4>
+          </td>
+          <td>
+            <img
+              :src="categoria.image"
+              alt="Imagen de la categoría"
+              class="img-fluid"
+              style="max-width: 150px"
+            />
+          </td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              @click="mostrarProductos(categoria.id)"
+            >
+              Ver Productos
             </button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Modal -->
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg">
+      <!-- Aquí se agrega la clase modal-lg -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Productos</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Título</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Imagen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(producto, index) in productosCategoria" :key="index">
+                <td>{{ producto.title }}</td>
+                <td>{{ producto.price }}</td>
+                <td>
+            <img 
+              v-for="(imagen, index) in producto.images" 
+              :key="index" 
+              :src="imagen" 
+              alt="Imagen de producto" 
+              style="max-width: 100px; max-height: 100px; margin-right: 5px;"
+            />
+          </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
-  </template>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+
+const categorias = ref([]) // Variable para almacenar las categorías
+const productosCategoria = ref([]) // Variable para almacenar los productos de la categoría seleccionada
+
+const mostrarProductos = async (categoriaId) => {
+  try {
+    const response = await fetch(
+      `https://api.escuelajs.co/api/v1/categories/${categoriaId}/products`,
+      {
+        method: 'GET'
+      }
+    )
+    if (response.ok) {
+      const data = await response.json()
+      console.log(data) // Asegúrate de que los datos sean los esperados
+      productosCategoria.value = data
+    } else {
+      console.error('Error al cargar los productos de la categoría')
+    }
+  } catch (error) {
+    console.error('Error al conectar con la API', error)
+  }
+}
+
+onMounted(async () => {
+  try {
+    // Carga de categorías
+    const responseCategorias = await fetch('https://api.escuelajs.co/api/v1/categories', {
+      method: 'GET'
+    })
+    if (responseCategorias.ok) {
+      const data = await responseCategorias.json()
+      console.log(data) // Asegúrate de que los datos sean los esperados
+      categorias.value = data // Asignamos los datos de las categorías a la variable categorias
+    } else {
+      console.error('Error al cargar los datos de la API')
+    }
+  } catch (error) {
+    console.error('Error al conectar con la API', error)
+  }
+})
+</script>

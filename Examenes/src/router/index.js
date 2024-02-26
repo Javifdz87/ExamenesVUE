@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Welcome from '@/views/Welcome.vue';
 import Examen from '@/views/ExamenView.vue'
 import ExamenSim from '@/views/SimExamenView.vue'
+import Filtro from '@/views/filtroExamenView.vue'
 
 
 
@@ -22,6 +23,11 @@ const routes = [
     path: '/examenSim',
     name: 'ExamenSim',
     component: ExamenSim
+  },
+  {
+    path: '/filtro',
+    name: 'Filtro',
+    component: Filtro
   },
 ];
 

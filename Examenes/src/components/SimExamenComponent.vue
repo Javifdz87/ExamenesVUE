@@ -11,13 +11,21 @@
         <div class="row">
           <div class="col-lg-12">
             <label for="">Titulo</label>
-            <input type="text" v-model="selectedPost.title" class="form-control" />
+            <input
+              type="text"
+              v-model="selectedPost.title"
+              class="form-control"
+            />
           </div>
         </div>
         <div class="row">
           <div class="col-lg-12">
             <label for="">Body</label>
-            <input type="text" v-model="selectedPost.body" class="form-control" />
+            <input
+              type="text"
+              v-model="selectedPost.body"
+              class="form-control"
+            />
           </div>
         </div>
         <div class="row">
@@ -33,8 +41,15 @@
 
     <div class="row">
       <div class="col-lg-12 d-flex justify-content-end">
-        <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
-          aria-expanded="false" aria-controls="collapseExample" @click="clearFields">
+        <button
+          class="btn btn-success"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseExample"
+          aria-expanded="false"
+          aria-controls="collapseExample"
+          @click="clearFields"
+        >
           Dar de Alta
         </button>
       </div>
@@ -56,18 +71,30 @@
           </td>
           <td>{{ post.body }}</td>
           <td>
-            <button class="btn btn-warning" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
-              aria-expanded="false" aria-controls="collapseExample" @click="selectPost(post)">
+            <button
+              class="btn btn-warning"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseExample"
+              aria-expanded="false"
+              aria-controls="collapseExample"
+              @click="selectPost(post)"
+            >
               Edit
             </button>
 
             <button class="btn btn-danger" @click="deletePost(post.id)">
               Delete
             </button>
-            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="
-              console.log('ID del post seleccionado:', post.id);
-            fetchComments(post.id);
-            ">
+            <button
+              class="btn btn-secondary"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              @click="
+                console.log('ID del post seleccionado:', selectedPost.id);
+                fetchComments(post.id);
+              "
+            >
               View comments
             </button>
           </td>
@@ -77,12 +104,23 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
         <div class="modal-body">
           <ul>
@@ -92,7 +130,11 @@
           </ul>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
             Close
           </button>
           <button type="button" class="btn btn-primary">Save changes</button>
@@ -101,7 +143,7 @@
     </div>
   </div>
 </template>
-  
+
 <script setup>
 import { ref, onMounted } from "vue";
 
@@ -111,6 +153,9 @@ const users = ref([]);
 const selectedUser = ref(null);
 const comments = ref([]);
 
+// Variable reactiva para almacenar los posts filtrados
+const filteredPosts = ref([]);
+
 // Función para cargar los posts
 const fetchPosts = async () => {
   try {
@@ -119,6 +164,8 @@ const fetchPosts = async () => {
       throw new Error("Failed to fetch posts");
     }
     posts.value = await response.json();
+    // Llenar los posts filtrados al inicio con todos los posts
+    filteredPosts.value = posts.value;
   } catch (error) {
     console.error(error);
   }
@@ -162,45 +209,12 @@ const fetchComments = async (postId) => {
 // Función para filtrar los posts por usuario seleccionado
 const filterPosts = () => {
   if (selectedUser.value) {
-    const userId = parseInt(selectedUser.value); // Convertir a número
+    const userId = selectedUser.value;
     // Filtrar los posts por el ID del usuario seleccionado
     filteredPosts.value = posts.value.filter((post) => post.userId === userId);
   } else {
     // Si no se ha seleccionado ningún usuario, mostrar todos los posts
     filteredPosts.value = posts.value;
-  }
-};
-
-const clearFields = () => {
-  // Limpiar los campos de título y cuerpo
-  selectedPost.value = { id: null, title: "", body: "" };
-};
-
-const createPost = () => {
-  // Agregar un nuevo post a la lista de posts
-  const newPost = {
-    id: Date.now(), // Asignar un ID único al nuevo post
-    title: selectedPost.value.title,
-    body: selectedPost.value.body,
-  };
-  posts.value.push(newPost);
-  console.log("Nuevo post creado:", newPost);
-  // Limpiar los campos de título y cuerpo
-  clearFields();
-};
-const updatePost = () => {
-  // Encuentra el índice del post seleccionado en la matriz de posts
-  const index = posts.value.findIndex(
-    (post) => post.id === selectedPost.value.id
-  );
-
-  // Verifica si se encontró el post en la matriz
-  if (index !== -1) {
-    // Actualiza el post en la matriz de posts con los datos del post seleccionado
-    posts.value[index] = { ...selectedPost.value };
-    console.log("Post actualizado:", selectedPost.value);
-  } else {
-    console.error("No se encontró el post seleccionado en la matriz de posts.");
   }
 };
 
@@ -210,7 +224,5 @@ onMounted(() => {
   fetchUsers();
 });
 
-// Variable reactiva para almacenar los posts filtrados
-const filteredPosts = ref([]);
-
 </script>
+
