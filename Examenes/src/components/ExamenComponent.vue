@@ -16,8 +16,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(categoria, index) in categorias" :key="index">
-          <td>
+        <tr v-for="(categoria, index) in categorias" :key="index" @click="mostrarProductos(categoria.id)" data-bs-toggle="modal"
+              data-bs-target="#exampleModal">
+          <td >
             <h4>{{ categoria.name }}</h4>
           </td>
           <td>
