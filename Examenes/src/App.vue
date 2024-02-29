@@ -1,5 +1,10 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <router-link to="/">Home</router-link>
+    <RouterView/>
   </div>
 </template>
+
+<script setup>
+import { RouterRink, RouterView } from "vue-router";
+</script>
